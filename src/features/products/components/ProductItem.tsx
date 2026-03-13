@@ -7,11 +7,12 @@ import styled from "@emotion/styled";
 import {apiURL} from "../../../constants.ts";
 import {useAppDispatch} from "../../../app/hooks.ts";
 import {deleteProductById, fetchProducts} from "../store/productsThunks.ts";
+import type {Category} from "../../../types";
 
 interface Props {
     title: string;
     image: string | null;
-    category: {title: string};
+    category: Category;
     price: number;
     id: string;
 }

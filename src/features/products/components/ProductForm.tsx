@@ -3,8 +3,8 @@ import React, {useEffect, useState} from 'react';
 import type {ProductMutation} from "../../../types";
 import FileInput from "../../../components/UI/FileInput/FileInput.tsx";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
-import {fetchCategories} from "../store/productsThunks.ts";
-import {selectCategories} from "../store/productsSelectors.ts";
+import {fetchCategories} from "../../categories/store/categoriesThunks.ts";
+import {selectCategories} from "../../categories/store/categoriesSelectors.ts";
 
 interface Props {
     onSubmit: (product: ProductMutation) => void;
@@ -15,7 +15,7 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
     const dispatch = useAppDispatch();
     const categories = useAppSelector(selectCategories);
     const [form, setForm] = useState<ProductMutation>({
-        category_id: ' ',
+        category: ' ',
         title: '',
         price: '',
         description: '',
@@ -55,13 +55,13 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
                     <TextField
                         select
                         id="category_id" label="Category"
-                        value={form.category_id}
+                        value={form.category}
                         onChange={inputChangeHandler}
                         name="category_id"
                     >
                         <MenuItem value=' ' disabled>Select Category</MenuItem>
                         {categories.map(category => (
-                            <MenuItem key={category.id} value={category.id}>{category.title}</MenuItem>
+                            <MenuItem key={category._id} value={category._id}>{category.title}</MenuItem>
                         ))}
                     </TextField>
                 </Grid>
