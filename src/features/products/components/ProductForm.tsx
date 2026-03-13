@@ -1,7 +1,10 @@
-import {Button, CircularProgress, Grid, TextField} from "@mui/material";
-import React, {useState} from 'react';
+import {Button, CircularProgress, Grid, MenuItem, TextField} from "@mui/material";
+import React, {useEffect, useState} from 'react';
 import type {ProductMutation} from "../../../types";
 import FileInput from "../../../components/UI/FileInput/FileInput.tsx";
+import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
+import {fetchCategories} from "../store/productsThunks.ts";
+import {selectCategories} from "../store/productsSelectors.ts";
 
 interface Props {
     onSubmit: (product: ProductMutation) => void;
@@ -9,12 +12,19 @@ interface Props {
 }
 
 const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
+    const dispatch = useAppDispatch();
+    const categories = useAppSelector(selectCategories);
     const [form, setForm] = useState<ProductMutation>({
+        category_id: ' ',
         title: '',
-        price: 0,
+        price: '',
         description: '',
         image: null,
     });
+
+    useEffect(() => {
+        dispatch(fetchCategories());
+    }, [dispatch]);
 
     const submitFormHandler = (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,12 +45,27 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
         }
     };
 
-    return (
+    return categories && (
         <form
             autoComplete="off"
             onSubmit={submitFormHandler}
         >
             <Grid container direction="column" spacing={2}>
+                <Grid>
+                    <TextField
+                        select
+                        id="category_id" label="Category"
+                        value={form.category_id}
+                        onChange={inputChangeHandler}
+                        name="category_id"
+                    >
+                        <MenuItem value=' ' disabled>Select Category</MenuItem>
+                        {categories.map(category => (
+                            <MenuItem key={category.id} value={category.id}>{category.title}</MenuItem>
+                        ))}
+                    </TextField>
+                </Grid>
+
                 <Grid>
                     <TextField
                         id="title" label="Title"

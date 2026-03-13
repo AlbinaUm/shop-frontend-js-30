@@ -1,11 +1,19 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axiosApi from "../../../axiosApi.ts";
-import type {Product, ProductMutation} from "../../../types";
+import type {Category, Product, ProductMutation} from "../../../types";
 
 export const fetchProducts = createAsyncThunk<Product[], void>(
     'products/fetchProducts',
     async () => {
         const response = await axiosApi.get<Product[]>('/products');
+        return response.data || [];
+    }
+);
+
+export const fetchCategories = createAsyncThunk<Category[], void>(
+    'products/fetchCategories',
+    async () => {
+        const response = await axiosApi.get<Category[]>('/categories');
         return response.data || [];
     }
 );

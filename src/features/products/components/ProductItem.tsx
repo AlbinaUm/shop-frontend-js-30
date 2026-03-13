@@ -11,6 +11,7 @@ import {deleteProductById, fetchProducts} from "../store/productsThunks.ts";
 interface Props {
     title: string;
     image: string | null;
+    category: {title: string};
     price: number;
     id: string;
 }
@@ -20,7 +21,7 @@ const ImageCartMedia = styled(CardMedia)({
     paddingTop: '56.25%', // 16:9
 });
 
-const ProductItem: React.FC<Props> = ({title, price, id, image}) => {
+const ProductItem: React.FC<Props> = ({title, price, id, image, category}) => {
     const dispatch = useAppDispatch();
     let cardImage = imageNotAvailable;
 
@@ -39,6 +40,10 @@ const ProductItem: React.FC<Props> = ({title, price, id, image}) => {
                 <ImageCartMedia image={cardImage} title={title}/>
                 <CardHeader title={title}/>
                 <CardContent>
+                    <strong>
+                        Category: {category.title}
+                    </strong>
+                    <hr/>
                     <strong>
                         Price: {price} KGS
                     </strong>
