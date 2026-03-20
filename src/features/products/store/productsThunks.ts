@@ -22,11 +22,18 @@ export const createProduct = createAsyncThunk<void, ProductMutation>(
     async (productMutation) => {
         const formData = new FormData();
         const keys = Object.keys(productMutation) as (keyof ProductMutation)[];
+
         keys.forEach((key) => {
             const value = productMutation[key];
 
             if (value !== null) {
-                formData.append(key, value);
+                if (value instanceof FileList) {
+                    for (let i = 0; i < value.length; i++) {
+                        formData.append('images', value[i]);
+                    }
+                } else {
+                    formData.append(key, value);
+                }
             }
         });
 

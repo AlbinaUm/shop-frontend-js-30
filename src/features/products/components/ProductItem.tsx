@@ -11,7 +11,7 @@ import type {Category} from "../../../types";
 
 interface Props {
     title: string;
-    image: string | null;
+    image: string[];
     category: Category;
     price: number;
     id: string;
@@ -26,8 +26,8 @@ const ProductItem: React.FC<Props> = ({title, price, id, image, category}) => {
     const dispatch = useAppDispatch();
     let cardImage = imageNotAvailable;
 
-    if (image) {
-        cardImage = apiURL + '/' + image;
+    if (image.length > 0) {
+        cardImage = apiURL + '/' + image[0];
     }
 
     const onDeleteProduct = async (id: string) => {

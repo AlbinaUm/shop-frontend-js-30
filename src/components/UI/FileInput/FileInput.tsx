@@ -4,33 +4,33 @@ import {Box, Button, Grid, TextField} from "@mui/material";
 interface Props {
     name: string;
     label: string;
+    errors: {[key: string]: string};
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const FileInput: React.FC<Props> = ({name, label, onChange}) => {
+const FileInput: React.FC<Props> = ({name, label, onChange, errors}) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [filename, setFilename] = useState('');
-    const [preview, setPreview] = useState<string | null>(null);
+    const [preview, setPreview] = useState<string[]>([]);
 
     useEffect(() => {
         return () => {
-            if (preview) URL.revokeObjectURL(preview);
+            if (preview) URL.revokeObjectURL(preview[0] as string);
         };
     }, [preview]);
 
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            setFilename(file.name);
+        if (e.target.files && e.target.files.length > 0) {
+            const filesArray = Array.from(e.target.files);
 
-            if (file.type.startsWith('image/')) {
-                setPreview(URL.createObjectURL(file));
-            } else {
-                setPreview(null);
-            }
+            const filesPreview = filesArray
+                .filter(file => file.type.startsWith('image/'))
+                .map(file => URL.createObjectURL(file));
+
+            setPreview(filesPreview);
         } else {
             setFilename('');
-            setPreview(null);
+            setPreview([]);
         }
 
         onChange(e);
@@ -50,6 +50,7 @@ const FileInput: React.FC<Props> = ({name, label, onChange}) => {
                 name={name}
                 ref={inputRef}
                 onChange={onFileChange}
+                multiple
             />
 
             <Grid container spacing={2} direction="row" alignItems="center">
@@ -58,6 +59,8 @@ const FileInput: React.FC<Props> = ({name, label, onChange}) => {
                         disabled
                         label={label}
                         value={filename}
+                        error={!!errors.name}
+                        helperText={errors.name}
                     />
                 </Grid>
                 <Grid>
@@ -77,11 +80,16 @@ const FileInput: React.FC<Props> = ({name, label, onChange}) => {
                         textAlign: 'center',
                     }}
                 >
-                    <img
-                        src={preview}
-                        alt='Preview'
-                        style={{maxWidth: '100%', maxHeight: '200px', display: 'block', margin: '0 auto'}}
-                    />
+                    {preview.length > 0 && <>
+                        {preview.map((url, index) => (
+                            <img
+                                key={index}
+                                src={url}
+                                alt={`Preview ${index}`}
+                                style={{maxWidth: '100%', maxHeight: '200px', display: 'block', margin: '0 auto'}}
+                            />
+                        ))}
+                    </>}
                 </Box>
             </Grid>}
         </>

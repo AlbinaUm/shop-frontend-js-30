@@ -5,13 +5,25 @@ import FileInput from "../../../components/UI/FileInput/FileInput.tsx";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {fetchCategories} from "../../categories/store/categoriesThunks.ts";
 import {selectCategories} from "../../categories/store/categoriesSelectors.ts";
+import {z} from "zod";
 
 interface Props {
     onSubmit: (product: ProductMutation) => void;
     loading?: boolean;
 }
 
+const productSchema = z.object({
+    category: z.string(),
+    title: z.string()
+        .min(1, 'Title is required')
+        .regex(/^[a-zA-Z]+$/, 'Title must contain only English letters'),
+    description: z.string().optional(),
+    price: z.string().min(1, 'Price is required'),
+    images: z.instanceof(FileList).optional(),
+});
+
 const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
+    const [errors, setErrors] = useState<{[key: string]: string}>({});
     const dispatch = useAppDispatch();
     const categories = useAppSelector(selectCategories);
     const [form, setForm] = useState<ProductMutation>({
@@ -19,7 +31,7 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
         title: '',
         price: '',
         description: '',
-        image: null,
+        images: null,
     });
 
     useEffect(() => {
@@ -28,7 +40,21 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
 
     const submitFormHandler = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(form);
+        const validationResult = productSchema.safeParse(form);
+
+        console.log(form)
+        if (!validationResult.success) {
+            const newErrors: {[key: string]: string} = {};
+
+
+           validationResult.error._zod.def.forEach(field => {
+               const indexPath = field.path[0] as string;
+               newErrors[indexPath] = field.message;
+           });
+           setErrors(newErrors);
+        } else {
+            onSubmit(form);
+        }
     };
 
     const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,8 +66,9 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
 
     const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, files} = e.target;
+        console.log(files);
         if (files) {
-            setForm(prevState => ({...prevState, [name]: files[0]}));
+            setForm(prevState => ({...prevState, [name]: files}));
         }
     };
 
@@ -54,10 +81,12 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
                 <Grid>
                     <TextField
                         select
-                        id="category_id" label="Category"
+                        id="category" label="Category"
                         value={form.category}
                         onChange={inputChangeHandler}
-                        name="category_id"
+                        name="category"
+                        error={!!errors.category}
+                        helperText={errors.category}
                     >
                         <MenuItem value=' ' disabled>Select Category</MenuItem>
                         {categories.map(category => (
@@ -72,6 +101,8 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
                         value={form.title}
                         onChange={inputChangeHandler}
                         name="title"
+                        error={!!errors.title}
+                        helperText={errors.title}
                     />
                 </Grid>
 
@@ -81,6 +112,8 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
                         value={form.price}
                         onChange={inputChangeHandler}
                         name="price"
+                        error={!!errors.price}
+                        helperText={errors.price}
                     />
                 </Grid>
 
@@ -91,14 +124,17 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
                         value={form.description}
                         onChange={inputChangeHandler}
                         name="description"
+                        error={!!errors.description}
+                        helperText={errors.description}
                     />
                 </Grid>
 
                 <Grid>
                     <FileInput
-                        label='image'
-                        name='image'
+                        label='images'
+                        name='images'
                         onChange={fileInputChangeHandler}
+                        errors={errors}
                     />
                 </Grid>
 

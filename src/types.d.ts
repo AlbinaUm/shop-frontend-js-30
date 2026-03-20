@@ -4,7 +4,7 @@ export interface Product {
     title: string;
     description: string;
     price: number;
-    image: string | null;
+    images: string[];
 }
 
 export interface ProductMutation  {
@@ -12,7 +12,7 @@ export interface ProductMutation  {
     title: string;
     description: string;
     price: string;
-    image: File | null;
+    images: FileList | null;
 }
 
 export interface Category {
