@@ -1,17 +1,20 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import {Provider } from "react-redux"
-import { store } from "./app/store.ts"
+import {persistor, store} from "./app/store.ts"
 import { ThemeProvider } from "@mui/material"
 import {BrowserRouter} from "react-router-dom";
 import theme from "./theme.ts";
+import {PersistGate} from 'redux-persist/integration/react';
 
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
-        <BrowserRouter>
-            <ThemeProvider theme={theme}>
-                <App />
-            </ThemeProvider>
-        </BrowserRouter>
+        <PersistGate persistor={persistor}>
+            <BrowserRouter>
+                <ThemeProvider theme={theme}>
+                    <App />
+                </ThemeProvider>
+            </BrowserRouter>
+        </PersistGate>
     </Provider>
 )

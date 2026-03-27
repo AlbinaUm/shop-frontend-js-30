@@ -3,19 +3,24 @@ import {Route, Routes} from "react-router-dom";
 import AppToolbar from "./components/UI/AppToolbar/AppToolbar.tsx";
 import NewProducts from "./features/products/NewProducts.tsx";
 import Products from "./features/products/Products.tsx";
+import Register from "./features/users/Register.tsx";
+import Login from "./features/users/Login.tsx";
+import {ToastContainer} from "react-toastify";
 
 const App = () => {
   return (
     <>
       <CssBaseline />
+        <ToastContainer />
       <header>
         <AppToolbar/>
       </header>
       <main>
         <Container maxWidth="xl">
           <Routes>
-            {/*<Route path="/" element={<Urls/>}/>*/}
             <Route path="/" element={<Products/>}/>
+            <Route path="/register" element={<Register/>}/>
+            <Route path="/login" element={<Login/>}/>
             <Route path="/products/new" element={<NewProducts/>}/>
             <Route path="*" element={<h1>Not found page</h1>}/>
           </Routes>

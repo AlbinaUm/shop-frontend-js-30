@@ -42,7 +42,6 @@ const ProductForm: React.FC<Props> = ({onSubmit, loading=false}) => {
         e.preventDefault();
         const validationResult = productSchema.safeParse(form);
 
-        console.log(form)
         if (!validationResult.success) {
             const newErrors: {[key: string]: string} = {};
 
