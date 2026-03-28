@@ -37,10 +37,10 @@ const ProductItem: React.FC<Props> = ({title, price, id, image, category}) => {
 
     return (
         <Grid size={{xs: 12, sm: 12, md: 6, lg: 6}}>
-            <Card sx={{height: '100%'}}>
+            <Card sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
                 <ImageCartMedia image={cardImage} title={title}/>
                 <CardHeader title={title}/>
-                <CardContent>
+                <CardContent sx={{mt: 'auto'}}>
                     <strong>
                         Category: {category.title}
                     </strong>
