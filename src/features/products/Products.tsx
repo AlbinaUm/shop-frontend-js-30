@@ -33,6 +33,7 @@ const Products = () => {
                         <ListItemButton
                             component={NavLink}
                             to="/"
+                            selected={!categoryQuery}
                         >
                             <ListItemText primary="All products" />
                         </ListItemButton>
