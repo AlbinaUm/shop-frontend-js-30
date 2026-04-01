@@ -6,14 +6,21 @@ import {Link, useNavigate} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {selectRegisterError} from "./usersSelectors.ts";
 import {register} from "./usersThunks.ts";
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const Register = () => {
     const dispatch = useAppDispatch();
     const error = useAppSelector(selectRegisterError);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
     const [form, setForm] = useState<RegisterMutation>({
         username: '',
         password: '',
+        confirmPassword: '',
     });
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,13 +85,52 @@ const Register = () => {
                                 fullWidth
                                 name="password"
                                 label="Password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 id="password"
                                 autoComplete="new-password"
                                 value={form.password}
                                 onChange={onInputChange}
                                 error={Boolean(getFieldError('password'))}
                                 helperText={getFieldError('password')}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                onClick={() => setShowPassword(prev => !prev)}
+                                                edge="end"
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Grid>
+
+                        <Grid  size={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                name="confirmPassword"
+                                label="Confirm password"
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                id="confirmPassword"
+                                value={form.confirmPassword}
+                                onChange={onInputChange}
+                                error={Boolean(getFieldError('confirmPassword'))}
+                                helperText={getFieldError('confirmPassword')}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                onClick={() => setShowConfirmPassword(prev => !prev)}
+                                                edge="end"
+                                            >
+                                                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                     </Grid>

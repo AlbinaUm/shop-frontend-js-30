@@ -6,9 +6,14 @@ import {Link, useNavigate} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {selectLoginError} from "./usersSelectors.ts";
 import {login} from "./usersThunks.ts";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
 
 const Login = () => {
     const dispatch = useAppDispatch();
+    const [showPassword, setShowPassword] = useState(false);
     const error = useAppSelector(selectLoginError);
     const navigate = useNavigate();
     const [form, setForm] = useState<LoginMutation>({
@@ -74,11 +79,23 @@ const Login = () => {
                                 fullWidth
                                 name="password"
                                 label="Password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 id="password"
                                 autoComplete="new-password"
                                 value={form.password}
                                 onChange={onInputChange}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                onClick={() => setShowPassword(prev => !prev)}
+                                                edge="end"
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                     </Grid>
