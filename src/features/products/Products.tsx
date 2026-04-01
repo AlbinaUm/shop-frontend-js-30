@@ -7,16 +7,16 @@ import {fetchProducts} from "./store/productsThunks.ts";
 import ProductItem from "./components/ProductItem.tsx";
 import {fetchCategories} from "../categories/store/categoriesThunks.ts";
 import {selectCategories} from "../categories/store/categoriesSelectors.ts";
+import {selectUser} from "../users/usersSelectors.ts";
 
 const Products = () => {
+    const user = useAppSelector(selectUser);
     const [searchParams] = useSearchParams();
     const categoryQuery = searchParams.get('category');
     const dispatch = useAppDispatch();
     const products = useAppSelector(selectProducts);
     const categories = useAppSelector(selectCategories);
     const productsFetchLoading = useAppSelector(selectProductsLoading);
-
-    console.log(categoryQuery);
 
     useEffect(() => {
         dispatch(fetchProducts(categoryQuery));
@@ -79,11 +79,11 @@ const Products = () => {
                 </Grid>
 
                 <Grid>
-                    <Button
+                    {user && <Button
                         color='primary'
                         component={NavLink}
                         to='/products/new'
-                    >Add product</Button>
+                    >Add product</Button>}
                 </Grid>
             </Grid>
         </Grid>

@@ -1,12 +1,15 @@
 import {Button, Menu, MenuItem} from "@mui/material";
 import type {User} from "../../../types";
 import {useState} from "react";
+import {useAppDispatch} from "../../../app/hooks.ts";
+import {logout} from "../../../features/users/usersThunks.ts";
 
 interface Props {
     user: User;
 }
 
 const UserMenu: React.FC<Props> = ({user}) => {
+    const dispatch = useAppDispatch();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -15,6 +18,10 @@ const UserMenu: React.FC<Props> = ({user}) => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleLogout = async () => {
+        dispatch(logout());
     };
 
     return (
@@ -31,7 +38,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem>Logout</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
         </>
     );
