@@ -79,7 +79,7 @@ const Products = () => {
                 </Grid>
 
                 <Grid>
-                    {user && <Button
+                    {user && user.role === 'admin' && <Button
                         color='primary'
                         component={NavLink}
                         to='/products/new'
