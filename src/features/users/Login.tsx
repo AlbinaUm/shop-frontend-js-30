@@ -5,11 +5,13 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import {Link, useNavigate} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {selectLoginError} from "./usersSelectors.ts";
-import {login} from "./usersThunks.ts";
+import {googleLogin, login} from "./usersThunks.ts";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import {GoogleLogin} from "@react-oauth/google";
+import { toast } from "react-toastify";
 
 const Login = () => {
     const dispatch = useAppDispatch();
@@ -34,6 +36,11 @@ const Login = () => {
         } catch (e) {
             console.log(e)
         }
+    };
+
+    const googleLoginHandler = async (credential: string) => {
+        await dispatch(googleLogin(credential)).unwrap();
+        navigate('/');
     };
 
 
@@ -107,6 +114,18 @@ const Login = () => {
                     >
                         Sign Up
                     </Button>
+                    <Box sx={{pt: 2, width: '100%'}}>
+                        <GoogleLogin
+                            width='100%'
+                            size='large'
+                            onSuccess={(credentialResponse) => {
+                                if (credentialResponse.credential) {
+                                    googleLoginHandler(credentialResponse.credential);
+                                }
+                            }}
+                            onError={() => toast.error('Google login failed')}
+                        />
+                    </Box>
                     <Grid container justifyContent="flex-end">
                         <Grid>
                             <Link to='/register'>
