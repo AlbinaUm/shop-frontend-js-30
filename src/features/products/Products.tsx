@@ -1,4 +1,4 @@
-import {Button, CircularProgress, Grid, List, ListItem, ListItemButton, ListItemText, Typography} from "@mui/material";
+import {CircularProgress, Grid, List, ListItem, ListItemButton, ListItemText, Typography} from "@mui/material";
 import {NavLink, useSearchParams} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {selectProducts, selectProductsLoading} from "./store/productsSelectors.ts";
@@ -7,10 +7,9 @@ import {fetchProducts} from "./store/productsThunks.ts";
 import ProductItem from "./components/ProductItem.tsx";
 import {fetchCategories} from "../categories/store/categoriesThunks.ts";
 import {selectCategories} from "../categories/store/categoriesSelectors.ts";
-import {selectUser} from "../users/usersSelectors.ts";
+import {observer} from "mobx-react-lite";
 
-const Products = () => {
-    const user = useAppSelector(selectUser);
+const Products = observer(() => {
     const [searchParams] = useSearchParams();
     const categoryQuery = searchParams.get('category');
     const dispatch = useAppDispatch();
@@ -77,17 +76,9 @@ const Products = () => {
                         }
                     </Grid>
                 </Grid>
-
-                <Grid>
-                    {user && user.role === 'admin' && <Button
-                        color='primary'
-                        component={NavLink}
-                        to='/products/new'
-                    >Add product</Button>}
-                </Grid>
             </Grid>
         </Grid>
     );
-};
+});
 
 export default Products;

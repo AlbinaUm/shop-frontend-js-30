@@ -3,6 +3,7 @@ import type {User} from "../../../types";
 import {useState} from "react";
 import {useAppDispatch} from "../../../app/hooks.ts";
 import {logout} from "../../../features/users/usersThunks.ts";
+import {NavLink} from "react-router-dom";
 
 interface Props {
     user: User;
@@ -38,6 +39,10 @@ const UserMenu: React.FC<Props> = ({user}) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
+                {user && user.role === 'admin' && <MenuItem>
+                    <NavLink to='/admin'>Admin panel</NavLink>
+                </MenuItem>
+                }
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
         </>

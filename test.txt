@@ -1,0 +1,15 @@
+MobX (state management)
+
+TFRP - Transparent Functional Reactive Programming
+
+1) State (состояние)
+хранить можно: обьекты массивы числа строки , для отслеживания observable
+
+2) Actions (действия)
+    функции которые изменяют состояние
+
+3) Derivations (Производные)
+
+Все что может быть вычислено на основе состояние автоматически
+ 3.1) Computed values
+ 3.2) reactions
