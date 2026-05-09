@@ -1,11 +1,11 @@
 import {Button, CircularProgress, Grid, MenuItem, TextField} from "@mui/material";
 import React, {useEffect, useState} from 'react';
 import type {ProductMutation} from "../../../types";
-import FileInput from "../../../components/UI/FileInput/FileInput.tsx";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {fetchCategories} from "../../categories/store/categoriesThunks.ts";
 import {selectCategories} from "../../categories/store/categoriesSelectors.ts";
 import {z} from "zod";
+import FileInput from "../../../components/ui/FileInput/FileInput.tsx";
 
 interface Props {
     onSubmit: (product: ProductMutation) => void;
